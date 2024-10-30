@@ -30,15 +30,32 @@ public class Main extends Application {
     private Button drawCardButton;
     private ProgressBar gameProgressBar;
 
+    //SHUFFLER, WHY CANT WE JUST USE LISTS
+    public static LoteriaCard[] shuffleArray(LoteriaCard[] array) {
+        Random rand = new Random();
+        LoteriaCard[] randomizer = new LoteriaCard[array.length];
+        int[] pulledNumbers = new int[array.length];
+
+        for (int i = 0; i < array.length; i++) {
+            pulledNumbers[i] = i;
+        }
+        for (int i = array.length - 1; i > 0; i--) {
+            int randomNumber = rand.nextInt(0, i);
+            int temp = pulledNumbers[i];
+            pulledNumbers[i] = pulledNumbers[randomNumber];
+            pulledNumbers[randomNumber] = temp;
+        }
+        for (int i = 0; i < array.length; i++) {
+            randomizer[i] = array[pulledNumbers[i]];
+        }
+        return randomizer;
+    }
+
     //GUI METHODS
     public static void main(String[] args) {
         launch(args);
     }
 
-    Random rand = new Random();
-    for(int i = LOTERIA_CARDS.length - 1; i > 0; i--){
-
-    }
     @Override
     public void start(Stage primaryStage) throws Exception {
         titleLabel = new Label("Loteria Cards!");
@@ -62,11 +79,12 @@ public class Main extends Application {
         drawCardButton.setOnAction(new EventHandler<ActionEvent>() {
 
             private int i = 0;
+            LoteriaCard[] itsRandomized = shuffleArray(LOTERIA_CARDS);
             @Override
             public void handle(ActionEvent actionEvent) {
-                if(i < LOTERIA_CARDS.length) {
-                    cardImageView.setImage(LOTERIA_CARDS[i].getImage());
-                    gameProgressBar.setProgress((double) (i+1) /(LOTERIA_CARDS.length));
+                if(i < itsRandomized.length) {
+                    cardImageView.setImage(itsRandomized[i].getImage());
+                    gameProgressBar.setProgress((double) (i+1) /(itsRandomized.length));
                     i++;
                 }
                 else{
